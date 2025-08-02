@@ -1,0 +1,165 @@
+---
+title: "STAT5002 Lab4 Worksheet"
+subtitle: "Introduction to Statistics"
+author: "University of Sydney STAT5002"
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    css: 
+      - https://use.fontawesome.com/releases/v5.0.6/css/all.css
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: show
+---
+<style>
+h2 { /* Header 2 */
+    font-size: 22px
+}
+</style>
+
+# Linear regression
+
+## Import data
+
+In this workshop, we will use simulated climate data based on real data from the Bureau of Meteorology at Canterbury Racecourse AWS {station 066194} collected in 2023. The simulated data contains several different daily measurements throughout Autumn (March-May).
+
+We will use the following variables.
+
+  * `X3pm.temperature` (**daily temperature measured at 3 pm**)
+  * `Maximum.temperature` (**maximum daily temperature**)
+  * `X9am.temperature` (**daily temperature measured at 9 am**)
+  * `Minimum.temperature` (**minimum daily temperature**) 
+  
+The temperature data are measured in Celsius. Please beware that the variable names are **case sensitive**.
+
+**`Task 1:`** Download the data file `AutumnCleaned.csv` in your `data` folder within your `STAT5002` folder. Then **import** the csv file into a variable called `data`:
+
+```{r}
+### write your code here. 
+# install.packages("UsingR")
+suppressMessages(library("UsingR"))
+data(father.son)
+data = father.son
+str(data)
+```
+
+## 1.1
+``` {r}
+plot(data$fheight, data$sheight, xlab = "Father Height", ylab = "Son height", col = adjustcolor("black"), alpha.f = 0.35)
+abline(a = 10, b = 0.8, col = "purple", lwd = 2)
+```
+
+```{r}
+plot(data$fheight, data$sheight, xlab = "Father Height", ylab = "Son height", col = adjustcolor("black"), alpha.f = 0.35)
+slope_SD  = sd(data$sheight) / sd(data$fheight)
+intercept_SD = mean(data$sheight) - slope_SD*mean(data$fheight)
+abline(a = intercept_SD, b = slope_SD, col = "purple", lwd = 2)
+```
+## 1.2
+``` {r}
+l = lm(data$sheight ~ data$fheight)
+
+plot(data$fheight, l$residuals, xlab = "Father height (inches)" , ylab = "residual")
+```
+## 1.3
+``` {r}
+
+sosr = function(x, y )
+
+```
+
+
+**`Task 2:`** How many observations are there? How many variables are there?
+```{r}
+table(data)
+```
+
+
+## Scatter plot
+    
+Generate a scatter plot for the the daily temperature observed at 3 pm (`X3pm.temperature`) and the observed daily maximum temperature (`Maximum.temperature`), with `X3pm.temperature` ($X$) on the horizontal axis and `Maximum.temperature` ($Y$) on the vertical axis.
+    
+Generate another scatter plot for the daily temperature observed at 9 am (`X9am.temperature`) and the observed daily minimum temperature (`Minimum.temperature`), with `X9am.temperature` ($X$) on the horizontal axis and `Minimum.temperature` ($Y$) on the vertical axis.
+
+**Comment on and compare these associations based on the scatter plot.** 
+    
+```{r}
+### Write your code here
+###
+```
+
+## Linear model
+
+Using the function `lm()` to build a linear model for predicting daily maximum temperature (`Maximum.temperature`) given the temperature observed at 3 pm (`X3pm.temperature`). 
+
+Generate a scatter plot for `X3pm.temperature` and `Maximum.temperature`. 
+
+Plot the resulting regression line on top of the scatter plot using `abline()`. 
+
+Predict the value of daily maximum temperature given a value of $X=33$ for the temperature observed at 3 pm. 
+
+Use the function `points(X, Y, col="red", cex=3, pch=19)` to plot the predict value $Y$ (together with the predictor $X$), where the options `col="red", cex=3, pch=19` specify the color, the marker size, and the mark type, respectively. 
+
+```{R}
+### Write your code here
+```
+
+## Residual plot
+
+Generate the residual plot of the linear model built above. Comment on if the regression line is a good fit. 
+
+```{R}
+### Write your code here
+```
+
+
+## Coefficient of determination
+
+Compared to the baseline prediction, what percentage of variation in the response variable `Maximum.temperature` can be explained by the linear regression model fitted above. 
+
+```{R}
+### Write your code here
+```
+
+
+## Verification of the coefficient of determination
+
+Recall that the coefficient of determination of the regression line is
+\[
+1 - \frac{\text{SSE}}{\text{SST}}, \quad \text{SSE} = \sum_{i = 1}^n (y_i - a - b x_i)^2, \quad \text{SST} = \sum_{i = 1}^n (y_i - \bar{y})^2
+\]
+where $a$ and $b$ are the intercept and the slope of the regression line, respectively. We want to verify that the coefficient of determination can be indeed be written as squared correlation coefficient ($r^2$) in R.
+
+**`Task 1:`** Compute the sum of squared residuals/errors (SSE) of the fitted linear model and the total sum of squares of the dependent variable `X3pm.temperature`. 
+
+
+```{r}
+### Write your code here
+```
+
+**`Task 2:`** Compute the coefficient of determination using the above formula, and compare it with $r^2$, do they agree? 
+
+```{r}
+### Write your code here
+```
+
+## Additional tasks (on your own time)
+
+You can also build the linear model for the pair of variables `Minimum.temperature` and `X9am.temperature`, and then check the quality of fit using the residual plot and the coefficient of determination.
+
+# Simulating chance
+
+In an experiment, three fair dice are thrown independently. What is the chance of getting a total equal to 6? 
+
+Write R code to simulate 1000 experiments and report your result. 
+
+You should compare your result with other students or repeat your experiments with different random seeds, what do you observe? 
+
+```{r, fig.height=4}
+### Write your code here
+```
+ 

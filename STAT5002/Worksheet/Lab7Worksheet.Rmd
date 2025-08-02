@@ -1,0 +1,117 @@
+---
+title: "STAT5002 Lab7 Worksheet"
+subtitle: "Confidence Intervals and Z-test"
+author: "© University of Sydney STAT5002"
+date: 
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    css: 
+      # - https://use.fontawesome.com/releases/v5.0.6/css/all.css
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: show
+---
+<style>
+h2 { /* Header 2 */
+    font-size: 22px
+}
+</style>
+
+<style>
+h3 { /* Header 3 */
+    font-size: 18px
+}
+</style>
+
+# <i class="fas fa-chart-bar"></i> Same-Sex Marriage Survey
+
+Between 12 September and 7 November 2017 the Australian Government conducted a national postal survey in order to gauge the Australian community's opinion on changing legislation about same-sex marriage.
+
+In the lead-up to the postal survey, various organisations conducted their own polls to infer how the final survey might turn out. [One such poll](https://www.theguardian.com/australia-news/2017/aug/21/most-support-marriage-equality-and-80-plan-to-vote-in-survey-guardian-essential-poll/) returned the following results:
+
+| In favour of proposed change | Against proposed change | Don't know | 
+|:----------------------------:|:-----------------------:|:----------:|
+|   1036                       | 581                     |   200      |
+
+What can we infer from this about the final results of the official postal survey?
+
+## Q1.3: Confidence interval {-}
+
+- **Determine a Wilson's 99% confidence interval for $p$ based on the observations in the previous part. Hint:** use `binom.confint()`.
+
+
+```{r}
+require(binom)    
+# write code here
+
+# sample size
+n = 1036 + 581
+
+# sample sum
+s = 1036 
+
+# observe sample proportion 
+p = s / n
+
+# coMpute CI
+CI = binom.confint(s, n, conf.level = 0.99, method = "wilson")
+
+CI
+```
+
+- **Perform a "sanity check" that the endpoints of the interval are such that the observed value $\bar x$ is "right on the edge" of a corresponding 99% prediction interval.**
+
+  - You need to identify the appropriate multiplier for a 99% prediction interval
+  - Note that the endpoints of the Wilson interval are available via the objects `CI$lower` and
+`CI$upper`:
+
+```{r}
+# write code here for the confidence interval
+
+# multiplier
+qnorm(0.995)
+
+# extracting CI endpoints
+CI$lower
+CI$upper
+
+# manually computing CI using the lower bound:
+CI$lower + c(-1,1) * qnorm(0.995) * sqrt(CI$lower * (1 - CI$lower) / n)
+
+# manually computing CI using the upper bound:
+CI$upper + c(-1,1) * qnorm(0.995) * sqrt(CI$upper * (1 - CI$upper) / n)
+```
+
+## Q1.4: Hypothesis test {-}
+
+**The observed proportion is greater than 0.5, but is it significantly greater? Answer this question with an appropriate formal hypothesis test.**
+
+* Hypotheses:
+$H_0: p = 0.5 $
+$H_1: p > 0.5 $
+
+* Assumptions
+
+- poll sample is like a random sample taken with replacement from a box model containing only 0s and 1s, with proportion of 1s equal to some unknown $p$
+
+* Test statistic
+
+```{r}
+# write code here for the P-value
+
+z = 2 * sqrt(1617) * (0.64 - 0.5)
+z
+
+# p - value
+
+pnorm(z, lower.tail = F)
+
+```
+* Conclusion
+
+The p-value less than the significance level of 0.05, meaning there is insufficient evidence of retain $H_0,$ and thus we must reject $H_0.$ Therefore, $p > 0.5$

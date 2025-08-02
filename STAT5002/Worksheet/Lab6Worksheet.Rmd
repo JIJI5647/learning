@@ -1,0 +1,194 @@
+---
+title: "STAT5002 Lab6 Worksheet"
+subtitle: "Introduction to Statistics"
+author: "University of Sydney STAT5002"
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: show
+---
+<style>
+h2 { /* Header 2 */
+    font-size: 22px
+}
+</style>
+
+This lab worksheet provides a workspace for the Question Sheet (pdf). Please refer to this week's question sheet for details.
+
+# Winnings after of 25 rolls
+
+
+Scenario: in a game, you roll a fair die once, and if it lands on "1", you win \$4, and otherwise, you lose \$1. Suppose you play this game 25 times. Let $X_1,\ldots,X_n$ denote your winnings each
+time (with $n=25$) and $S=X_1+\cdots+X_n$ your total winnings after $n=25$ repetitions of the game.
+
+## Draw the box model by hand.
+
+## Calculate the mean and SD of the box.
+
+Try to work out the calculations "by hand", and then verify your results in R.
+
+```{r}
+## write code here
+box = c()
+
+
+```
+
+## Calculate the $E(S)$ and $SE(S)$, which are the expected value and SE of your total winnings after 25 repetitions of the game.
+
+Try to work out the calculations "by hand", and then verify your results in R.
+
+```{r}
+## write code here
+
+
+
+```
+
+## Using the appropriate normal approximation (by the Central Limit Theorem)
+
+- Estimate the chance that you will break even, that is, not lose money. 
+- Estimate the chance that you will win more than \$10.
+- Estimate the chance that you will lose more than \$10
+
+Hint: you can first work out the mean and SD of the normal curve, and then you will need to use R for calculating the chance, and it may help to draw a diagram (by hand).
+
+**Estimate the chance that you will break even, that is, not lose money.**
+
+```{r}
+## write code here
+
+
+
+```
+
+
+**Estimate the chance that you will win more than \$10.**
+
+```{r}
+## write code here
+
+
+
+```
+
+
+**Estimate the chance that you will lose more than \$10.**
+
+```{r}
+## write code here
+
+
+
+```
+
+## Compare these approximations to "true" probabilities using a simulation:
+
+  - simulate a sum of 25 games 1000 (or more) times
+  - determine the proportion of simulations where the sum is
+    - positive
+	- more than \$10
+	- less than -\$10
+	
+Code to obtain 1000 of the sums in one line is 
+
+- `sums=replicate(1000, sum(sample(box, 25, replace=T)))`.
+
+You can also compare the shape of the histogram to the normal curve with mean $E(S)$
+and SE $SE(S)$ with something like
+```{r, eval=F}
+hist(sums, pr=T)
+curve(dnorm(x, m=E.S, s=SE.S), add=T, lty=2)
+```
+What do you notice?
+
+
+```{r}
+# Write your code here
+
+
+```
+
+## Winnings after 100 rolls
+
+Now consider the same game, but you play 100 times. First use CLT and normal approximations to carry the following estimations
+
+- Estimate the chance that you will break even, that is, not lose money. 
+- Estimate the chance that you will win more than \$10.
+- Estimate the chance that you will lose more than \$10
+
+```{r}
+# Write your code here
+
+
+```
+
+Then, use a simulation to assess the quality of these normal approximations, and the shape of the histogram. What do you conclude?
+
+  - simulate a sum of 100 games 1000 (or more) times
+  - determine the proportion of simulations where the sum is
+    - positive
+	- more than \$10
+	- less than -\$10
+	
+You can also compare the shape of the histogram to the normal curve with mean $E(S)$
+and SE $SE(S)$. What do you conclude?
+
+```{r}
+# Write your code here
+
+
+```
+
+
+# Simulate the CLT 
+
+## Example: Simulate simple box (symmetric)
+
+Experiment to find out what minimum size number of draws it takes, for the distribution of the sample sum to start looking like a Normal curve.
+
+Method: Use `replicate` to simulate 1000 samples of 10, 30, 100 and 1000 draws from a box, and compare your results.
+
+- Take draws from 0,1 box
+```{r}
+set.seed(1)
+box=c(0,1)
+totals1 = replicate(1000, sum(sample(box, 10, rep = T)))
+totals2 = replicate(1000, sum(sample(box, 30, rep = T)))
+totals3 = replicate(1000, sum(sample(box, 100, rep = T)))
+totals4 = replicate(1000, sum(sample(box, 1000, rep = T)))
+
+par(mfrow = c(2,2))
+hist(totals1, main = "10 draws")
+hist(totals2, main = "30 draws")
+hist(totals3, main = "100 draws")
+hist(totals4, main = "1000 draws")
+```
+
+How many draws do we need to take before the histogram starts looking like a normal distribution?
+
+## Simulate simple box (asymmetric)
+
+- Take draws from 0,1,1,1,1,1,1 box
+```{r}
+## write code here
+
+```
+
+How many draws do we need to take before the histogram starts looking like a normal distribution?
+
+## Simulate the box from Q1
+
+Using the box from Q1, experiment to find out what minimum size number of draws it takes, for the distribution of the sample sum to start looking like a Normal curve for your own custom box.
+
+```{r}
+# write code here
+
+```
+

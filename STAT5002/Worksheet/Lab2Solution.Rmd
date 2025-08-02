@@ -1,0 +1,259 @@
+---
+title: "STAT5002 Lab2 Solution"
+subtitle: "Introduction to Statistics"
+author: "© University of Sydney STAT5002"
+date: '`r format(Sys.Date(), "%d %B %Y")`'
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: show
+---
+<style>
+h2 { /* Header 2 */
+    font-size: 22px
+}
+</style>
+
+# Import data and IDA
+
+
+- Save the data-file `math1005_cleaned.csv`  in your data folder within your STAT5002 folder.
+
+- **Import** the data into a variable called `math1005`:
+
+```{r}
+math1005 = read.csv("data/math1005_cleaned.csv")
+```
+
+This data was collected from an **optional survey** for MATH1005 students at the start of 2022 Semester 2. There are a total of **928 students** enrolled in this course.
+
+- How many survey **responses** are there? How many **variables** are there?
+
+```{r}
+### write code here
+dim(math1005)
+```
+
+**Answer**: There are 281 **responses** and 8 **variables**.
+
+- What are the **columns** of your data and what are their **type**? Are they classified correctly?
+    - *Hint: Use the function `str `. Other useful functions are `names` and`head`*.
+     
+```{r}
+### write code here
+str(math1005)
+```
+
+**Answer**: Variables seems to be classified correctly. 
+
+
+# Quantitative Data
+
+## Height
+
+- Create a **graphical summary** for the **height** distribution of the cohort. Comment on the distribution, are there any **outliers**? Are there any issues with the data?
+
+```{r}
+### write code here
+par(mfrow = c(1,2))
+hist(math1005$Height, freq=F)
+boxplot(math1005$Height)
+```
+
+**Answer**: The height distribution seems roughly symmetric with one outlier!
+
+- Calculate some **numerical summaries** for the **heights**. Briefly summarise your findings. Here you may need to remove `NA`s in the variable before proceed.  
+
+```{r}
+### write code here
+height = na.omit(math1005$Height)
+mean(height)
+sd(height)
+median(height)
+IQR(height)
+```
+
+**Answer**: We have that the **mean** height is 173.4cm which is close to the **median** of 175cm. This is expected as the data is rather **symmetric**. The IQR of the height (14cm) is about 8% of the median height. 
+
+## Write a function in R to compute the population standard deviation
+
+In the lectures, we learned how to write a function in R. Here is your turn, we want to write a function to compute the **population standard deviation** of a data set. Let's name the function `sdpop`. 
+
+- Complete the function in the following.
+
+```{r}
+# complete the following function
+sdpop <- function(X){
+  ### write your code here
+  m = sum(X)/length(X)
+  s = sqrt(sum((X-m)^2)/length(X))
+  return(s)
+}
+```
+
+- Calculate the population SD of height and check if it is correct. 
+
+```{r}
+### Apply your function sdpop here to height and check its correctness
+
+sdpop(height) # my function
+n = length(height)
+sd(height)*sqrt((n-1)/n) # this is the R result with adjustment
+```
+
+## Age
+
+- Create a **graphical summary** for the **age** distribution of the cohort. Comment on the distribution, are there any **outliers**? Are there any issues with the data? 
+
+```{r}
+### write code here
+par(mfrow = c(1,2))
+hist(math1005$Age, freq=F)
+boxplot(math1005$Age)
+```
+
+**Answer**: The age distribution is heavily **right skewed** with **several outliers**. This would be because the majority of MATH1005 students are recent high school graduates aged around 17-18, and there would be a few older students who are in later years of study, or returning to study after work. There are also quite young students - is that possible?
+
+- Calculate some **numerical summaries** for the **ages**. Briefly summarise your findings.
+
+```{r}
+### write code here
+mean(math1005$Age)
+sd(math1005$Age)
+median(math1005$Age)
+IQR(math1005$Age)
+```
+
+**Answer**: We have that the **mean** age is 18.84 which is a bit higher than the **median** of 18. This reflects the right skewed nature of the data. 
+
+Try to recheck these values once you consider only students who are older than 17. 
+
+
+## Shoe Size
+
+- Create a **graphical summary** for the **shoe size** distribution of the cohort. Comment on the distribution, are there any **outliers**? Are there any issues with the data? **Hint:** Some might response using a different shoe size convention, perhaps using EU instead of US.
+
+```{r}
+### write code here
+par(mfrow = c(1,2))
+hist(math1005$ShoeSize, freq=F)
+boxplot(math1005$ShoeSize)
+```
+
+**Answer**: The data appears heavily **right skewed** with **several outliers**. This could be due to some responses using a different shoe size convention, perhaps using EU instead of US. This is quite misleading, so perhaps it is best to **remove** these values.
+
+- Perform any appropriate **data cleaning**. You may also need to remove `NA`s here. 
+
+```{r}
+ShoeSize_clean = math1005$ShoeSize[math1005$ShoeSize < 20 & !is.na(math1005$ShoeSize)]  # only keep shoe sizes < 20 and not NA
+par(mfrow = c(1,2))
+hist(ShoeSize_clean, freq=F)
+boxplot(ShoeSize_clean)
+```
+
+**Answer**: Now we have a more insightful visualisation!
+
+- Calculate some **numerical summaries** for the **shoe sizes**. Briefly summarise your findings.
+  
+```{r}
+### write code here
+mean(ShoeSize_clean)
+sd(ShoeSize_clean)
+median(ShoeSize_clean)
+IQR(ShoeSize_clean)
+```
+
+**Answer**: We have that the **mean** shoe size is 9.22 which is slightly higher than the **median** which is 9, reflecting the slight **right skewness** in the data. The **IQR** of the shoesize is 3, which is about 1/3 of the median shoesize. 
+
+
+# Qualitative Data
+
+## International
+
+- Create a **graphical summary** for the distribution of **domestic and international students** in the cohort. 
+  - *Hint: what type of graphical summary would be the most appropriate? You can refer to code in previous lectures and labs*.
+
+```{r}
+### write code here
+barplot(table(math1005$International))
+```
+
+- What is the **proportion** of **international students**? Briefly summarise your findings.
+  - *Hint: `math1005$International == "International"` creates a list of `TRUE` and `FALSE` of whether each student is international or not. R can interpret `TRUE` as 1 and `FALSE` as 0.*
+```{r}
+### write code here
+sum(math1005$International == "International")/length(math1005$International)
+
+## Alternative option
+mean(math1005$International == "International")
+```
+
+**Answer**: According to the data, 39.5% of the students in the MATH1005 cohort are international students.
+
+## Gender
+
+- Create a **graphical summary** for the **gender** distribution of the cohort.
+
+```{r}
+### write code here
+barplot(table(math1005$Gender))
+```
+
+
+- What is the **proportion** of **females**? Briefly summarise your findings
+
+```{r}
+### write code here
+mean(math1005$Gender == "Female")
+```
+
+**Answer**: According to the data, the MATH1005 cohort is 39.5% female. It seems like there are more males than females and some students prefer not to say their gender.
+
+## Country
+
+This task contains some additional visualisation techniques not covered in lectures. These are not mandatory for learning other topics of this unit but can be useful in real life.  
+
+- Create a **barplot** for the **Country** that the students in the cohort were born in. Is it meaningful? Are there any issues with the data? How could this be improved?
+
+```{r}
+### write code here
+barplot(table(math1005$Country))
+```
+
+**Answer**: There are way too many different entries, so it is unfeasible to place them all on the same graph. We can also see that most countries only appear once, this could be due to a very diverse cohort, or some responses entered in a slightly different formats (eg. capital/lower case letters). This data seems tricky to work with! Maybe we can try salvage it by only looking at the most common ones, or by making a **wordcloud**!
+
+- Make a barplot of the **top 10 countries** among the cohort. Briefly summarise your findings. 
+  - *Hint: the `sort` function might be useful!*
+
+```{r}
+### write code here
+majors = table(math1005$Country)  # count each major
+majors = sort(majors, decreasing = TRUE)  # sort in decreasing order
+majors = majors[1:10]  # select top 10
+
+par(mar = c(12, 4, 2, 2))  # adjust plotting margins so axis labels fit
+barplot(majors, las = 2)   # note the data is already tabulated, so don't use `table` again
+```
+
+**Answer**: We can see that there are a few common countries like Australia, China and India. However, note that the data has some issues, for example formatting issues with capitalisation and spelling. This is a challenge of dealing with real data!
+
+- **Extension**: make a **word cloud** of all the majors. Briefly summarise your findings.
+
+You will need to first **install the** `wordcloud` **and** `tm` **packages**. To do this, you can run the first line without the `#`. Once installed, they will remain on your computer and you do not need to run this line ever again. But in each document you want to make a word cloud, you will need to include `library(wordcloud)` to **load the package**. 
+
+```{r, warning = F, message = F}
+#install.packages(c("wordcloud", "tm"))
+library(wordcloud)
+wordcloud(math1005$Country, min.freq = 1)
+```
+
+**Answer**: We can now clearly see that most students were born in **Australia**, with many born in **China**, and **India**.
+
+
+

@@ -1,0 +1,149 @@
+---
+title: "Untitled"
+author: "zmj"
+date: "2025-05-19"
+output: html_document
+---
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+test.A=c(5.90,5.26,2.97,7.15,10.06,11.87,1.94,6.27,6.81,4.08, 8.13,15.18,8.82,3.87,5.23,11.29,7.92,12.82,7.20,10.03)
+ test.B=c(6.07,4.89,2.92,7.00,9.99,11.70,1.94,5.8,6.95,4.03,7.76,15.02,9.08,3.73,4.88,10.81,8.05,12.96,7.10, 10.07)
+```
+
+```{r}
+mean(test.A)
+mean(test.B)
+sd(test.A)
+sd(test.B)
+```
+
+```{r}
+diff = test.A - test.B
+qqnorm(diff)
+qqline(diff, col = "red")
+```
+
+```{r}
+t.test(diff)
+```
+
+```{r}
+mean_diff = mean(diff)
+sd_diff = sd(diff)
+t_diff = (mean_diff - 0) / (sd_diff/ sqrt(20))
+t_diff
+```
+
+```{r}
+p_value = pt(t_diff,df = 19, lower.tail = FALSE)
+p_value
+```
+
+
+```{r}
+set.seed(1)
+time = 10000
+n = length(diff)
+T.stats.sim <- numeric(time)
+
+for (i in 1 : time) {
+  samp = sample(diff, size = n, replace = TRUE)
+  T.stats.sim[i] = (mean(samp) - mean(diff)) / (sd(samp) / sqrt(n))
+}
+hist(T.stats.sim, breaks = 50, prob = TRUE,
+     main = "Bootstrap t-statistics vs Theoretical t-distribution",
+     xlab = "t-statistic", col = "lightblue", border = "white")
+
+curve(dt(x, df = n - 1), add = TRUE, lty = 2, col = "red", lwd = 2)
+```
+
+
+```{r}
+mean(T.stats.sim > t_diff)
+```
+
+```{r}
+group.A = c(5.54, 4.41, 6.35, 5.04, 7.33, 6.47, 4.08, 6.00, 7.39, 5.53, 1.54, 6.16, 4.23, 2.36, 5.09, 5.10, 5.33, 3.75, 6.49, 2.13, 5.44, 7.74, 3.80)
+ group.B = c(4.31, 6.20, 5.25, 2.14, 3.26, 1.47, 2.24, 4.20, 3.56, 3.68, 7.02, 2.94, 5.49, 3.37, 4.59, 3.05, 5.24)
+```
+
+```{r}
+qqnorm(group.A)
+qqline(group.A)
+```
+
+```{r}
+qqnorm(group.B)
+qqline(group.B)
+```
+
+```{r}
+
+```
+
+```{r}
+m = length(group.A)
+n = length(group.B)
+sd_a = sd(group.A)
+sd_b = sd(group.B)
+mean_a = mean(group.A)
+mean_b = mean(group.B)
+sigma_p_bar = round(sqrt( ((m - 1) * sd_a^2 + (n - 1) * sd_b^2) / (m + n - 2) ), 3)
+sigma_p_bar
+
+```
+
+```{r}
+t_score = round((mean_a - mean_b) / (sigma_p_bar * sqrt(1/m + 1/n)),3)
+t_score
+```
+
+```{r}
+p_value_2 = 2 * pt(t_score,df = m + n - 2,lower.tail = FALSE)
+p_value_2
+```
+
+```{r}
+t.test(group.A, group.B, var.equal = FALSE)
+
+
+```
+
+```{r}
+under_18 = c(12,6,12)
+one8_29 = c(14,10,6)
+three0_49 = c(16,12,12)
+five0_ = c(8,16,6)
+Oij = rbind(under_18, one8_29, three0_49, five0_)
+
+rownames(Oij) = c("Under 18", "18–29", "30–49", "50+")
+colnames(Oij) = c("Laptop","Desktop","Tablet")
+
+# or easily use that 
+Eij = matrix(c(
+  11.54, 10.15, 8.31,    # Under 18
+  11.54, 10.15, 8.31,    # 18–29
+  15.38, 13.54, 11.08,   # 30–49
+  11.54, 10.15, 8.31     # 50+
+), nrow = 4, byrow = TRUE)
+
+rownames(Eij) = c("Under 18", "18–29", "30–49", "50+")
+colnames(Eij) = c("Laptop", "Desktop", "Tablet")
+T = sum((Oij - Eij)^2 / Eij)
+T
+```
+
+
+```{r}
+df = (nrow(Oij) - 1) * (ncol(Oij) - 1)
+p_value = pchisq(T, df, lower.tail = FALSE)
+p_value
+```

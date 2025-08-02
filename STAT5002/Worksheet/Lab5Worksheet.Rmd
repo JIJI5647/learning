@@ -1,0 +1,231 @@
+---
+title: "STAT5002 Lab5 Worksheet"
+subtitle: "Introduction to Statistics"
+author: "University of Sydney STAT5002"
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: show
+---
+
+# Simulating Chance
+
+
+## Simulating an unfair die (sample with replacement)
+
+A six-sided die is loaded in such a way that every even number is twice as likely to occur as every odd
+number. The die is tossed once.
+
+(A) Fill out the following probability distribution.
+
+---
+
+| $X$| 1   | 2   | 3  | 4   | 5   | 6   |
+|:---|:--- |:--- |:--- |:--- |:--- |:--- |
+|Probability    |  |  |  |  |  |  |
+---
+
+(B) What is the probability that a number (strictly) less than 4 occurs?
+
+    
+(C) Simulate (B) using 10,000 experiments.
+
+```{r}
+# Write your code here
+
+
+```
+
+
+## MATH1005 Data (optional, sample without replacement)
+
+In Semester 2 2022, MATH1005 had 928 students. In the MATH1005 survey data set, we only have 281 observations.
+Hence, we only have a sample of the  MATH1005 cohort  in S2, 2022.
+
+Using a simulation we will solve the following exercise:
+
+- **Assume that, out of the 928 students, 427 are female and 501 are male. When picking randomly 281 students out of 928, what is the probability that more than 50% of the sample are female?**
+
+To do this, implement the following steps:
+
+- Use the ``sample`` function to draw without replacement a sample of 281 from a population with 427 `1`'s and 501 `0`'s.  Call it ``my.sample``.
+    - *Hint 1: Use ``?sample`` to open the help file of the sample function*.
+    - *Hint 2: The population (x) can be written as ``c(rep(1,427), rep(0,501))``*.
+    
+```{r}
+### modify the following code
+# here is my example of a different population with 500 1s and 500 0s
+population = c(rep(1,500), rep(0,500))
+# here is my example of drawing 200
+my.sample = sample(population,200)
+```
+
+- Apply the ``mean`` function on ``my.sample``. This gives you the proportion of `1`'s (= females) in your draw.  Call the result ``prop.female``.
+
+```{r}
+### Write your code here
+
+```
+
+- Write ``female.5 = prop.female > 0.5``. The variable `female.5` tells you whether more than 50% are female in the draw (`TRUE`) or not (`FALSE`).
+
+```{r}
+### Write your code here
+
+```
+
+- Create a function for one draw:
+
+```{r}
+drawing = function(){
+  ### Write your code here
+  
+}           
+```
+
+- Type `drawing()` and get the result of one draw. You can press the "Run current chunk" button several times.
+
+```{r}
+drawing()
+```
+- It seems that `FALSE` (i.e. less than 50% are female) happens quite often.
+
+- Use the ``replicate`` function to repeat the draw 10,000 times. Call the result ``drawings`` (type  `` drawings = replicate(10000,drawing()) `` )
+- Note: you can use `set.seed` function to make your results reproducible. Why are the results not reproducible otherwise?
+
+```{r}
+### Write your code here
+
+```
+
+- Take the mean of ``drawings`` via the ``mean`` function. 
+```{r}
+### Write your code here
+
+```
+- The result is the desired probability. That is, **from a population of 928 students, where 427 are female, a random sample of 281 students has approximately this probability of having more than 50% females**.
+
+
+
+# Box Model 
+
+## <i class="fa fa-th-list"></i> Summary
+
+The **box model** models the sum (or mean) of $n$ random draws from a population. The population is the "box", and the collection of draws forms the "sample".
+
+(1) **The Box**
+
+As the box represents a population, we use `popsd(box)`, where we write our own function `popsd()` to compute the "population SD" of the box:
+```{r}
+popsd = function(x) sqrt( mean(x^2)-(mean(x)^2))
+```
+
+|Focus|By hand|In R|Symbol |
+|--------------|-----|--|-------|
+|Mean of the Box|Calculate the the average| `mean(box)`|$\mu$ |
+|SD of the Box|Calculate the population sd|  `popsd(box)`|$\sigma$ |
+
+(2) **The Sample**
+
+We can focus on either the sum (or mean) of the sample.
+
+|Focus|Expected Value |Standard Error |
+|----|----|----|
+|Sum of the Sample| $n \mu$  |$\sqrt{n} \sigma$ |
+|Mean of the Sample| $\mu$ |  $\sigma/\sqrt{n}$|
+
+
+For each calculation, work out the answer "by hand", and then check your answers in R.
+
+## Simple box model for multiple choice questions  {-}
+
+Model the following scenario: the multiple choice component of your final exam contains 20 questions, each with one correct answer and three incorrect answers. A correct answer is worth 1 mark and an incorrect answer is worth 0 marks. 
+
+Would it be unusual to pass (score at least 50% in) the multiple choice section by randomly guessing? 
+
+**Draw the box model**
+
+```
+       |              |
+	   |  0  0  0  1  |
+	   +--------------+
+```
+## Calculate the mean and SD of the box
+
+```{r}
+# write code here
+
+```
+
+## Calculate the $E(S)$ and  $SE(S)$ where $S$ is the sum of draws from the box
+
+```{r, message = F, warning = F}
+# write code here
+
+```
+
+
+## How many standard errors is the observed value (the passing number of correct answers) away from the expected value? 
+
+```{r}
+# write code here
+
+```
+
+## Assuming the box of all possible sums has a normal shape, would it be unusual to pass by randomly guessing? 
+
+We need to know a little more than just the expected value and standard error. If we assume in addition that the histogram of all possible sums is normal, we can use a normal approximation. What mean and SD should be used here? 
+
+```{r}
+# write code here
+
+
+```
+
+You should observe that the chance of getting 10 or more correct when randomly guessing is about 1 in 200. This is very small, so it is (in this sense) "highly unlikely" that random guessing will result in a pass.
+
+
+## Statistical Thinking 1
+
+If we decided to model the above scenario using the **mean** $\bar X$ instead of the **sum** $S$, which parts would change, and which parts would stay the same? Why?
+
+- **Mean and SD of box**
+
+Should they change? These are unchanged. We have the same box as before. What happen to the following?
+
+
+- **$E(\bar X)$ and $SE(\bar X)$**
+```{r}
+# write code here
+
+```
+
+
+- **Number of SE away from expected value**
+
+How many SE is the observed value (passing proportion) away from the expected proportion?
+
+```{r}
+# write code here
+
+```
+
+It should remain unchanged. In detail: now passing is getting an average of 0.5 or more.
+How many SEs above the expected value is this?
+
+
+## Statistical Thinking 2
+
+- Assuming the box of all possible sums has a normal shape, would it be more or less unusual to pass the multiple choice section if there were 100 questions instead of 20?
+
+```{r}
+# write code here
+
+```
+

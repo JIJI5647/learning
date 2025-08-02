@@ -1,0 +1,414 @@
+---
+title: "STAT5002 Lab1 Worksheet"
+subtitle: "Introduction to Statistics"
+author: "© University of Sydney STAT5002"
+date: '`r format(Sys.Date(), "%d %B %Y")`'
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    css: 
+     # - https://use.fontawesome.com/releases/v5.0.6/css/all.css
+    toc: true
+    toc_float: true
+    code_folding: show  
+---
+
+
+Throughout this unit, we will use R and RStudio as main data analysis tools, please download R and RStudio via the following URL links:
+
+**R download:** https://cran.r-project.org/bin/windows/base/
+
+**RStudio download:** https://posit.co/download/rstudio-desktop/
+
+**RStudio will not work without R installed! You need both.**
+
+You can either use R Console directly or input the code in the R code blocks to work on these questions. To compile this R Markdown file (Rmd) into a readable html, you need to **knit** the file.
+
+**IMPORTANT** You need the data files `AllFatalities.csv` and `simpsons_smoking.csv` to knit this worksheet. First make sure your `Lab1Worksheet.Rmd` file is in your `STAT5002` folder. Then download the data from Canvas, store it in a folder called `data`, inside your `STAT5002` folder. These data files are used in Q2 and Q3. 
+
+Notice, in the YAML above, that `code_folding: show`. This means that when you press knit, all the code is run and the .html file contains the output, with the code blocks shown at the side. You can try to set this to `code_folding: hide` to hide the code.
+
+Don't worry if you don't understand all the code yet - just read it carefully, see what it does, and follow the sample code.
+
+# Warm-up: Chick Weight
+
+Here we will explore some data stored in R called `ChickWeight`. It contains the weight of chicks in grams as they grow from day 0 to day 21.  
+
+## Background to Data
+
+Read about the background to the data. 
+
+```{r, eval = FALSE}
+?ChickWeight
+```
+
+- Putting `eval=F` in the code blocks means that the code is not run when knitted.
+
+## Structure of the Data
+
+Have a look at the first 6 rows of the data.
+```{r}
+head(ChickWeight)
+```
+
+Have a look at the last 6 rows of the data.
+```{r}
+tail(ChickWeight)
+```
+
+How many observations are in the data? How many variables are in the data? 
+
+```{r}
+dim(ChickWeight)
+```
+
+There are 578 observations and 4 variables.
+
+What are the names of the variables?
+
+```{r}
+names(ChickWeight)
+```
+
+Note: The names of variables are case sensitive. Best practise is that all the variables use the same convention - ie here, they should all start with capitals.  However, you have to use the data you are given, which may be messy!
+
+<br>
+
+## Explore the data
+
+First, isolate the **diet** variable by using `ChickWeight$Diet`, and store it in `diet`.
+
+```{r}
+diet = ChickWeight$Diet
+# diet <- ChickWeight$Diet  ## alternate option!
+```
+
+Note: RStudio has code completion, so will auto-predict your commands. When you type `ChickWeight$`, the names of the all the variables will come up. Easy!
+
+Build a frequency table to find out the most common type of diet fed to the chicks.
+
+```{r}
+# write your code here
+table(diet)
+```
+
+Second, isolate the **weight** variable, and store it in `weight`.
+
+```{r}
+# write your code here
+weight = ChickWeight$weight
+```
+
+What is the minimum and maximum weight of the chicks? Use `min()` and `max()`.
+
+```{r}
+# write your code here
+max(weight)
+```
+
+In later weeks, we will learn more about the `plot` command. But for now, run this code and see if you can see any patterns.
+
+```{r}
+plot(ChickWeight$Time, ChickWeight$weight, col=ChickWeight$Diet)
+```
+
+From a glance, it looks like the different types of feed (the different colours) makes the chicks grow to different weighs over time!
+
+
+# <i class="fas fa-car"></i> Australian Road Fatalities
+
+Consider the Australian road fatalities from 1989 (a bigger version of the data used in lectures). 
+
+**How to proceed?**
+
+- Check whether you can knit the document without any error. If not, you may need to make sure your `Lab1Worksheet.Rmd` and data file are in the correct folders. 
+- Read through each question.
+- Try to understand the given code.
+- Write short concise answers in this file. 
+- Have a go at the explore questions.
+
+## Import the data.
+
+Note: Recall that you need to store your `Lab1Worksheet.Rmd` in your `STAT5002` folder, then download the data from Canvas, store the data in `STAT5002/data` and then run the code. Alternatively, you can store the data in the same folder as `Lab1Worksheet.Rmd`, and remove the `data/` part of the code. You will need to use this method in future projects, when you import your own data.
+
+```{r}
+# Read data from csv into R
+road = read.csv("data/AllFatalities.csv",header=T)
+```
+
+- Produce a snapshot of the data. 
+```{r}
+str(road)
+```
+
+## Research Questions
+
+### Were there more fatalities on a certain day of the week? 
+
+- Here we consider **1 qualitative variable**: the road fatalities across the *days of the week*.
+
+- First isolate the variable `Dayweek`. Check how R classifies it. Produce a barplot. You may see that the days are in the wrong order. This is because that R automatically sorts factors alphabetically unless we impose an ordering.
+
+```{r}
+dayweek = road$Dayweek # isolate the variable Dayweek
+class(dayweek) # check how R classify it
+# Write your code below to produce the barplot
+
+```
+
+- We can re-order the categories for `dayweek` and then re-produce a barplot (see lecture slides). What pattern emerges? Suggest possible reasons for it.
+
+```{r}
+### Write your code here
+
+```
+
+In the barplot, you can use the option `las=2` to display the category labels vertically, try it out below. 
+
+```{r}
+### Write your code here
+
+```
+
+- Summarise what you have discovered.
+
+    Answer: 
+
+<br>
+
+### Were there more fatalities in certain age groups?
+
+- Here we consider **1 quantitative variable**: *age*.
+
+- First isolate the variable `Age`. How does R classify it?
+
+```{r}
+age = road$Age
+class(age)
+```
+
+```{r}
+
+```
+
+
+- Change the classification to a quantitative variable (use `as.numeric()`).
+```{r}
+### Write your code here
+
+```
+
+- Produce graphical summaries (try boxplot and histogram). What patterns are revealed?
+```{r}
+### Write your code here
+
+```
+
+- Summarise what you have discovered.
+
+    Answer: 
+
+<br>
+
+### Does gender affect the number of fatalities across age groups?
+
+- Here we consider **1 quantitative variable divided by 1 qualitative variable**.
+
+- Control for gender (using comparative boxplot) - i.e., consider fatalities by age divided by gender.
+```{r}
+### Write your code here
+
+```
+
+- Summarise what you have discovered.
+
+    Answer: 
+
+<br>
+
+### Was there any pattern in how buses were involved in fatalities, on different days of the week?
+
+- Here we consider **2 qualitative variables**: the road fatalities across the *days of the week*, cross-classified by *bus involvement*.
+
+- Is there any pattern?
+
+```{r}
+### Write your code here
+
+```
+
+- Summarise what you have discovered.
+
+    Answer: 
+    
+<br>
+
+### Data selection
+
+How many deaths were happened at age under 45 and on Saturday? Here you need to consider how to deal with data points with value `NA`
+
+```{r}
+### Write your code here
+
+```
+
+How many deaths were happened at age under 45 and NOT on Saturday? 
+
+
+```{r}
+##### Write your code here
+
+```
+
+
+### Were there more fatalities on a certain months of the year? 
+
+- Here we consider **1 qualitative variable**: the road fatalities across the *months of the year*.
+
+Hint: `month.name` contains the months of year sorted in the correct order!
+
+```{r}
+month.name
+```
+
+```{r}
+##### Write your code here
+
+```
+
+- Summarise what you have discovered.
+
+    Answer: 
+
+### Was there any pattern between Age and Crash Type?
+
+- Here we consider **1 quantitative variable divided by 1 qualitative variable**. ie consider fatalities by age divided by crash type.
+
+What are the different Crash Types?
+
+```{r}
+table(road$Crash_Type)
+```
+
+```{r}
+##### Write your code here
+
+```
+
+- Summarise what you have discovered.
+
+    Answer: 
+
+### Was there any pattern in how heavy rigid trucks were involved in fatalities, on different days of the week?
+
+- Here we consider **2 qualitative variables**: the road fatalities across the *days of the week*, cross-classified by *heavy rigid truck involvement*. Note you may need to deal with missing values!
+
+```{r}
+##### Write your code here
+
+```
+
+- Summarise what you have discovered.
+
+    Answer: 
+
+# Smoking Study (UK) and Simpson's paradox (Optional)
+
+Here we have a go at analysing an **external** data set `simpsons_smoking.csv`. The aim of the data is to analyse the effect of smoking on mortality rates in women. The initial data collected from an electoral roll near Newcastle in UK. The follow-up data is collected 20 years later. 
+
+The study concentrated on 1,314 women who were either smokers or non-smokers (there are 162 who had stopped smoking and 18 did not record their status in the full data). 
+
+For each part, check the code, run the code, and then write your answer.
+
+## Import the data
+
+- First make sure your `Lab1Worksheet.Rmd` file is in your `STAT5002` folder. Then download the data from Canvas, store it in a folder called `data`, inside your `STAT5002` folder, and then run the following code. You also need to remove the `eval = F` before you knit, otherwise the chunk won't run!
+
+```{r}
+smoking = read.csv("data/simpsons_smoking.csv", header=T)
+```
+
+- Alternatively, you may store the `Rmd` file in the **same folder** as the `csv` file, and then remove the `data/` part of the code.
+
+- Pro Tip: you can hover your cursor over the `Lab1Worksheet.Rmd` in the top left corner to see where the file is.
+
+- The type of data (here `.csv`) must match up with the command (`read.csv)`. So if the data has the ending`.xlsx`, we need to load a package and use `read_excel`. 
+
+## Examine the data 
+- What is the size of the data? What do the rows and columns represent? Is this the full data from the UK study, or a summary?
+
+```{r}
+dim(smoking)
+names(smoking)
+```
+
+There are 7 rows and 5 columns. The rows represent an age group, and the columns represent the variables (number of people in each catgeory). This is **summarised** data because each row represents a summary (total of all people in that age group). Contrast this to the `ChickWeight` data where each row represents an observation.
+
+- Can you see any patterns?
+
+```{r}
+smoking
+```
+
+## Research question: is the mortality rate higher for smokers or non-smokers?
+
+### First, consider the overall mortality rates 
+
+- Calculate the mortality rate for smokers.
+
+```{r}
+sum(smoking$SmokersDied)/sum(smoking$SmokersDied+smoking$SmokersSurvived)
+```
+
+- Calculate the mortality rate for non-smokers.
+
+```{r}
+# write your code here
+
+```
+
+What is your conclusion? 
+
+
+### Second, examine the mortality rate by age groups 
+
+#### Did more smokers or non-smokers die in the 18-24 age group? {-}
+
+- Calculate the mortality rate for smokers in the 18-24 age group.
+
+```{r}
+# Consider Smokers 18-24
+sum(smoking$SmokersDied[1])/sum(smoking$SmokersDied[1]+smoking$SmokersSurvived[1])
+```
+
+- Calculate the mortality rate for non-smokers in the 18-24 age group.
+
+```{r}
+# Consider Non-Smokers 18-24
+# write your code here
+
+```
+
+Note: `smoking$SmokersDied[1]` selects the 1st entry of `smoking$SmokersDied`.
+
+- You should observe that the smokers have a higher mortality rate in the 18-24 age group.
+
+#### Did more smokers or non-smokers die in the 65-74 age group? {-}
+
+```{r}
+# write your code here
+
+```
+
+What's your finding here? 
+    
+###  Simpson's paradox
+
+Sometimes there is a clear trend in each of the groups of data that reverses when the groups are pooled together.
+   
+- It occurs when relationships between percentages in subgroups are reversed when the subgroups are combined, because of a confounding variable.
+- The association between a pair of variables $(X,Y)$ reverses sign upon conditioning of a third variable $Z$, regardless of the value taken by $Z$.
+
